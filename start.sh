@@ -40,10 +40,13 @@ PATH="$PATH:$INSTALLDIR/ptxdist/bin"
 echo "Setting PATH to $PATH"
 export PATH
 
+mkdir -p ~/STLinux.Archive
+
 cd $INSTALLDIR/STLinux.Toolchain
 echo "Configuring Toolchain"
 sed -i -e "s\^PTXCONF_PREFIX=.*\PTXCONF_PREFIX=$INSTALLDIR\g" ptxconfig/sh4-linux-gcc-4.7.2-glibc-2.10.2-binutils-2.23-kernel-2.6.32-sanitized.ptxconfig
 ptxdist select ptxconfig/sh4-linux-gcc-4.7.2-glibc-2.10.2-binutils-2.23-kernel-2.6.32-sanitized.ptxconfig
+rm -rf src; ln -s ~/STLinux.Archive src
 echo "Building Toolchain to $INSTALLDIR"
 ptxdist go
 
@@ -54,6 +57,7 @@ echo "Configuring BSP"
 ptxdist select configs/duckbox-$BOXTYPE-master/ptxconfig
 ptxdist platform configs/duckbox-$BOXTYPE-master/platformconfig
 ptxdist toolchain $INSTALLDIR/STLinux.Toolchain-2013.03.1/sh4-linux/gcc-4.7.2-glibc-2.10.2-binutils-2.23.1-kernel-2.6.32-sanitized/bin
+rm -rf src; ln -s ~/STLinux.Archive src
 
 rm platform-$BOXTYPE/logfile
 
