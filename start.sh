@@ -26,13 +26,6 @@ else
   cd $INSTALLDIR/ptxdist_sh; git pull; cd $INSTALLDIR
 fi
 
-echo "Cloning/Pulling ptxdist"
-if [ ! -d $INSTALLDIR/ptxdist_sh ]; then
-  git clone https://github.com/Schischu/ptxdist_sh.git
-else
-  cd $INSTALLDIR/ptxdist_sh; git pull; cd $INSTALLDIR
-fi
-
 echo "Cloning/Pulling Toolchain"
 if [ ! -d $INSTALLDIR/STLinux.Toolchain ]; then
   git clone https://github.com/Schischu/STLinux.Toolchain.git
