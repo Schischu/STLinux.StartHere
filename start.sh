@@ -68,7 +68,8 @@ cd $INSTALLDIR
 
 cd $INSTALLDIR/STLinux.BSP-Duckbox
 echo "Configuring BSP"
-ptxdist select configs/duckbox-$BOXTYPE-master/ptxconfig
+ptxdist select configs/ptxconfig
+ptxdist collection configs/duckbox-$BOXTYPE-master/collectionconfig
 ptxdist platform configs/duckbox-$BOXTYPE-master/platformconfig
 ptxdist toolchain $INSTALLDIR/STLinux.Toolchain-2013.03.1/sh4-linux/gcc-4.7.2-glibc-2.10.2-binutils-2.23.1-kernel-2.6.32-sanitized/bin
 rm -rf src; ln -s ~/STLinux.Archive src
