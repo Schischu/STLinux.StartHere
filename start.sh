@@ -14,6 +14,12 @@ if [ "x$REPO" == "x" ]; then
   REPO="https://github.com/$FORK"
 fi
 
+BSPNAME=STLinux.BSP-Duckbox
+
+if [ ! "x$NEXT" == "x" ]; then
+  BSPNAME=$BSPNAME-Next
+fi
+
 INSTALLDIR=`pwd`
 
 cd $INSTALLDIR
@@ -46,11 +52,11 @@ else
   cd $INSTALLDIR/STLinux.Toolchain; git pull; cd $INSTALLDIR
 fi
 
-echo "Cloning BSP ($REPO/STLinux.BSP-Duckbox.git)"
-if [ ! -d $INSTALLDIR/STLinux.BSP-Duckbox ]; then
-  git clone $REPO/STLinux.BSP-Duckbox.git
+echo "Cloning BSP ($REPO/$BSPNAME.git)"
+if [ ! -d $INSTALLDIR/$BSPNAME ]; then
+  git clone $REPO/$BSPNAME.git
 else
-  cd $INSTALLDIR/STLinux.BSP-Duckbox; git pull; cd $INSTALLDIR
+  cd $INSTALLDIR/$BSPNAME; git pull; cd $INSTALLDIR
 fi
 
 cd $INSTALLDIR/ptxdist_sh
@@ -79,8 +85,8 @@ ptxdist go
 
 cd $INSTALLDIR
 
-cd $INSTALLDIR/STLinux.BSP-Duckbox
-echo "Configuring BSP"
+cd $INSTALLDIR/$BSPNAME
+echo "Configuring BSP ($BSPNAME)"
 ptxdist select configs/ptxconfig
 ptxdist collection configs/duckbox-$BOXTYPE-master/collectionconfig
 ptxdist platform configs/duckbox-$BOXTYPE-master/platformconfig
