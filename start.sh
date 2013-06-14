@@ -20,9 +20,9 @@ cd $INSTALLDIR
 echo "Installing to $INSTALLDIR"
 
 if [ "$#" -eq 0 ]; then
-  echo "Cloning/Pulling STLinux.StartHere"
+  echo "Cloning/Pulling STLinux.StartHere ($REPO/STLinux.StartHere.git)"
   if [ ! -d $INSTALLDIR/STLinux.StartHere ]; then
-    git clone $REPO/STLinux.StartHere
+    git clone $REPO/STLinux.StartHere.git
   else
     cd $INSTALLDIR/STLinux.StartHere; git pull; cd $INSTALLDIR
   fi
@@ -32,21 +32,21 @@ if [ "$#" -eq 0 ]; then
   exit $?;
 fi
 
-echo "Cloning/Pulling ptxdist"
+echo "Cloning/Pulling ptxdist ($REPO/ptxdist_sh.git)"
 if [ ! -d $INSTALLDIR/ptxdist_sh ]; then
   git clone $REPO/ptxdist_sh.git
 else
   cd $INSTALLDIR/ptxdist_sh; git pull; cd $INSTALLDIR
 fi
 
-echo "Cloning/Pulling Toolchain"
+echo "Cloning/Pulling Toolchain ($REPO/STLinux.Toolchain.git)"
 if [ ! -d $INSTALLDIR/STLinux.Toolchain ]; then
   git clone $REPO/STLinux.Toolchain.git
 else
   cd $INSTALLDIR/STLinux.Toolchain; git pull; cd $INSTALLDIR
 fi
 
-echo "Cloning BSP"
+echo "Cloning BSP ($REPO/STLinux.BSP-Duckbox.git)"
 if [ ! -d $INSTALLDIR/STLinux.BSP-Duckbox ]; then
   git clone $REPO/STLinux.BSP-Duckbox.git
 else
