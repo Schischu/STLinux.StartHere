@@ -1,6 +1,19 @@
 #!/bin/bash
 
-BOXTYPE="ufs912"
+#Usage:
+#BOXTYPE=ufs912 FORK=Schischu ./start.sh
+#BOXTYPE=ufs913 REPO=https://github.com/Schischu ./start.sh
+
+if [ "x$BOXTYPE" == "x" ]; then
+  BOXTYPE="ufs912"
+fi
+if [ "x$FORK" == "x" ]; then
+  FORK="Schischu"
+fi
+if [ "x$REPO" == "x" ]; then
+  REPO="https://github.com/$FORK"
+fi
+
 INSTALLDIR=`pwd`
 
 cd $INSTALLDIR
@@ -9,7 +22,7 @@ echo "Installing to $INSTALLDIR"
 if [ "$#" -eq 0 ]; then
   echo "Cloning/Pulling STLinux.StartHere"
   if [ ! -d $INSTALLDIR/STLinux.StartHere ]; then
-    git clone https://github.com/Schischu/STLinux.StartHere
+    git clone $REPO/STLinux.StartHere
   else
     cd $INSTALLDIR/STLinux.StartHere; git pull; cd $INSTALLDIR
   fi
@@ -21,21 +34,21 @@ fi
 
 echo "Cloning/Pulling ptxdist"
 if [ ! -d $INSTALLDIR/ptxdist_sh ]; then
-  git clone https://github.com/Schischu/ptxdist_sh.git
+  git clone $REPO/ptxdist_sh.git
 else
   cd $INSTALLDIR/ptxdist_sh; git pull; cd $INSTALLDIR
 fi
 
 echo "Cloning/Pulling Toolchain"
 if [ ! -d $INSTALLDIR/STLinux.Toolchain ]; then
-  git clone https://github.com/Schischu/STLinux.Toolchain.git
+  git clone $REPO/STLinux.Toolchain.git
 else
   cd $INSTALLDIR/STLinux.Toolchain; git pull; cd $INSTALLDIR
 fi
 
 echo "Cloning BSP"
 if [ ! -d $INSTALLDIR/STLinux.BSP-Duckbox ]; then
-  git clone https://github.com/Schischu/STLinux.BSP-Duckbox.git
+  git clone $REPO/STLinux.BSP-Duckbox.git
 else
   cd $INSTALLDIR/STLinux.BSP-Duckbox; git pull; cd $INSTALLDIR
 fi
