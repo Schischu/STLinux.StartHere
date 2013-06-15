@@ -95,6 +95,13 @@ echo "Setting PATH to $PATH"
 export PATH
 
 mkdir -p ~/STLinux.Archive
+mkdir -p ~/STLinux.Archive/boot
+touch ~/STLinux.Archive/boot/audio_7100.elf
+touch ~/STLinux.Archive/boot/audio_7109.elf
+touch ~/STLinux.Archive/boot/audio_7105.elf
+touch ~/STLinux.Archive/boot/video_7100.elf
+touch ~/STLinux.Archive/boot/video_7109.elf
+touch ~/STLinux.Archive/boot/video_7105.elf
 
 cd $INSTALLDIR/STLinux.Toolchain
 echo "Configuring Toolchain"
