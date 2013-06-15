@@ -17,8 +17,12 @@ if [ "x$BSPNAME" == "x" ]; then
   BSPNAME=STLinux.BSP-Duckbox
 fi
 
+BSPMAINLINENAME=$BSPNAME
 BSPNEXTNAME=$BSPNAME-Next
 
+if [ ! "x$NEXT" == "x" ]; then
+  BSPNAME=$BSPNEXTNAME
+fi
 
 INSTALLDIR=`pwd`
 
@@ -38,6 +42,18 @@ if [ "$#" -eq 0 ]; then
   exit $?;
 fi
 
+echo "Configuration"
+echo "------------------------------------------------------------------------"
+echo "Boxtype:    $BOXTYPE"
+echo "Fork:       $FORK"
+echo "Repo:       $REPO"
+echo "BSPName:    $BSPNAME"
+echo "Next:       $NEXT"
+echo "InstallDir: $INSTALLDIR"
+echo "-------------------------------------------------------------------------"
+
+sleep 1
+
 echo "Cloning/Pulling ptxdist ($REPO/ptxdist_sh.git)"
 if [ ! -d $INSTALLDIR/ptxdist_sh ]; then
   git clone $REPO/ptxdist_sh.git
@@ -54,12 +70,11 @@ fi
 
 echo "Cloning BSP ($REPO/$BSPNAME.git)"
 if [ ! -d $INSTALLDIR/$BSPNAME ]; then
-  if [ ! "x$NEXT" == "x" ]; then
-    git clone $REPO/$BSPNAME.git
+  git clone $REPO/$BSPNAME.git
+  if [ "x$NEXT" == "x" ]; then
     git remote add next $REPO/$BSPNEXTNAME.git
   else
-    git clone $REPO/$BSPNEXTNAME.git
-    git remote add mainline $REPO/$BSPNAME.git
+    git remote add mainline $REPO/$BSPMAINLINENAME.git
   fi
 else
   cd $INSTALLDIR/$BSPNAME; git pull; cd $INSTALLDIR
