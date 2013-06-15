@@ -55,6 +55,9 @@ fi
 echo "Cloning BSP ($REPO/$BSPNAME.git)"
 if [ ! -d $INSTALLDIR/$BSPNAME ]; then
   git clone $REPO/$BSPNAME.git
+  if [ ! "x$NEXT" == "x" ]; then
+    git remote add next $REPO/$BSPNAME-Next.git
+  fi
 else
   cd $INSTALLDIR/$BSPNAME; git pull; cd $INSTALLDIR
 fi
