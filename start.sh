@@ -13,12 +13,12 @@ fi
 if [ "x$REPO" == "x" ]; then
   REPO="https://github.com/$FORK"
 fi
-
-BSPNAME=STLinux.BSP-Duckbox
-
-if [ ! "x$NEXT" == "x" ]; then
-  BSPNAME=$BSPNAME-Next
+if [ "x$BSPNAME" == "x" ]; then
+  BSPNAME=STLinux.BSP-Duckbox
 fi
+
+BSPNEXTNAME=$BSPNAME-Next
+
 
 INSTALLDIR=`pwd`
 
@@ -54,9 +54,12 @@ fi
 
 echo "Cloning BSP ($REPO/$BSPNAME.git)"
 if [ ! -d $INSTALLDIR/$BSPNAME ]; then
-  git clone $REPO/$BSPNAME.git
   if [ ! "x$NEXT" == "x" ]; then
-    git remote add next $REPO/$BSPNAME-Next.git
+    git clone $REPO/$BSPNAME.git
+    git remote add next $REPO/$BSPNEXTNAME.git
+  else
+    git clone $REPO/$BSPNEXTNAME.git
+    git remote add mainline $REPO/$BSPNAME.git
   fi
 else
   cd $INSTALLDIR/$BSPNAME; git pull; cd $INSTALLDIR
