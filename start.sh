@@ -115,7 +115,7 @@ cd $INSTALLDIR
 
 cd $INSTALLDIR/$BSPNAME
 echo "Configuring BSP ($BSPNAME)"
-ptxdist select configs/ptxconfig
+ptxdist select configs/ptxconfig_e2_gstreamer
 ptxdist collection configs/duckbox-$BOXTYPE-master/collectionconfig
 ptxdist platform configs/duckbox-$BOXTYPE-master/platformconfig
 ptxdist toolchain $INSTALLDIR/STLinux.Toolchain-2013.03.1/sh4-linux/gcc-4.7.2-glibc-2.10.2-binutils-2.23.1-kernel-2.6.32-sanitized/bin
