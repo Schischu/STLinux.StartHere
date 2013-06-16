@@ -125,6 +125,13 @@ rm platform-$BOXTYPE/logfile
 
 echo "Building BSP"
 ptxdist go
+
+echo "Building BSP - Optional packages"
+# Currently we have to temporarly remove the collectionconfig to build optional packages
+rm selected_collectionconfig
+ptxdist go
+ptxdist collection configs/duckbox-$BOXTYPE-master/collectionconfig
+
 echo "Creating images"
 ptxdist images
 
