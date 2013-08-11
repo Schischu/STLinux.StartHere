@@ -7,6 +7,12 @@
 if [ "x$BOXTYPE" == "x" ]; then
   BOXTYPE="ufs912"
 fi
+if [ "x$SW" == "x" ]; then
+  SW="enigma2"
+fi
+if [ "x$MEDIAFW" == "x" ]; then
+  MEDIAFW="gstreamer"
+fi
 if [ "x$FORK" == "x" ]; then
   FORK="Schischu"
 fi
@@ -16,6 +22,21 @@ fi
 if [ "x$BSPNAME" == "x" ]; then
   BSPNAME=STLinux.BSP-Duckbox
 fi
+
+if [ "x$SW" == "xenigma2" ]; then
+  SSW="e2"
+  LSW=""
+  GRAPHICFW=""
+elif [ "x$SW" == "xxbmc" ]; then
+  SSW="xbmc"
+  LSW="_$SSW"
+  GRAPHICFW="_directfb"
+fi
+
+PTXCONFIG="configs/ptxconfig_$SSW_$MEDIAFW"
+COLLECTIONCONFIG="configs/duckbox-$BOXTYPE-master/collectionconfig$LSW"
+PLATFORMCONFIG="configs/duckbox-$BOXTYPE-master/platformconfig$GRAPHICFW"
+
 
 BSPMAINLINENAME=$BSPNAME
 BSPNEXTNAME=$BSPNAME-Next
@@ -45,6 +66,9 @@ fi
 echo "Configuration"
 echo "------------------------------------------------------------------------"
 echo "Boxtype:    $BOXTYPE"
+echo "Software:   $SW"
+echo "MediaFW:    $MEDIAFW"
+echo "GraphicFW:  $GRAPHICFW"
 echo "Fork:       $FORK"
 echo "Repo:       $REPO"
 echo "BSPName:    $BSPNAME"
@@ -117,9 +141,9 @@ cd $INSTALLDIR
 
 cd $INSTALLDIR/$BSPNAME
 echo "Configuring BSP ($BSPNAME)"
-ptxdist select configs/ptxconfig_e2_gstreamer
-ptxdist collection configs/duckbox-$BOXTYPE-master/collectionconfig
-ptxdist platform configs/duckbox-$BOXTYPE-master/platformconfig
+ptxdist select $PTXCONFIG
+ptxdist collection $COLLECTIONCONFIG
+ptxdist platform $PLATFORMCONFIG
 ptxdist toolchain $INSTALLDIR/STLinux.Toolchain-2013.03.1/sh4-linux/gcc-4.7.2-glibc-2.10.2-binutils-2.23.1-kernel-2.6.32-sanitized/bin
 rm -rf src; ln -s ~/STLinux.Archive src
 
@@ -132,7 +156,7 @@ echo "Building BSP - Optional packages"
 # Currently we have to temporarly remove the collectionconfig to build optional packages
 rm selected_collectionconfig
 ptxdist go
-ptxdist collection configs/duckbox-$BOXTYPE-master/collectionconfig
+ptxdist collection $COLLECTIONCONFIG
 
 echo "Creating images"
 ptxdist images
