@@ -33,7 +33,7 @@ elif [ "x$SW" == "xxbmc" ]; then
   GRAPHICFW="_directfb"
 fi
 
-PTXCONFIG="configs/ptxconfig_$SSW_$MEDIAFW"
+PTXCONFIG="configs/ptxconfig_${SSW}_${MEDIAFW}"
 COLLECTIONCONFIG="configs/duckbox-$BOXTYPE-master/collectionconfig$LSW"
 PLATFORMCONFIG="configs/duckbox-$BOXTYPE-master/platformconfig$GRAPHICFW"
 
