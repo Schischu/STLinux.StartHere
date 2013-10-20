@@ -108,6 +108,7 @@ fi
 
 cd $INSTALLDIR/ptxdist_sh
 echo "Configuring ptxdist"
+./autogen.sh
 ./configure --prefix=$INSTALLDIR/ptxdist
 echo "Building ptxdist"
 make
