@@ -4,6 +4,7 @@
 #BOXTYPE=ufs912 FORK=Schischu ./start.sh
 #BOXTYPE=ufs913 REPO=https://github.com/Schischu ./start.sh
 
+
 if [ "x$BOXTYPE" == "x" ]; then
   BOXTYPE="ufs912"
 fi
@@ -132,8 +133,14 @@ touch ~/STLinux.Archive/boot/video_7105.elf
 
 cd $INSTALLDIR/STLinux.Toolchain
 echo "Configuring Toolchain"
-sed -i -e "s\^PTXCONF_PREFIX=.*\PTXCONF_PREFIX=$INSTALLDIR\g" ptxconfig/sh4-linux-gcc-4.7.2-glibc-2.10.2-binutils-2.23-kernel-2.6.32-sanitized.ptxconfig
-ptxdist select ptxconfig/sh4-linux-gcc-4.7.2-glibc-2.10.2-binutils-2.23-kernel-2.6.32-sanitized.ptxconfig
+
+#TOOLCHAIN=gcc-4.7.2-glibc-2.10.2-binutils-2.23-kernel-2.6.32-sanitized
+TOOLCHAIN=gcc-4.7.3-glibc-2.10.2-43-binutils-2.23.2-kernel-2.6.32-sanitized
+
+TOOLCHAIN_VERSION=`grep "PTXCONF_PROJECT=" ptxconfig/sh4-linux-$TOOLCHAIN | sed "s/PTXCONF_PROJECT=\"STLinux.Toolchain-//g" | sed "s/\"//g"`
+
+sed -i -e "s\^PTXCONF_PREFIX=.*\PTXCONF_PREFIX=$INSTALLDIR\g" ptxconfig/sh4-linux-$TOOLCHAIN.ptxconfig
+ptxdist select ptxconfig/sh4-linux-$TOOLCHAIN.ptxconfig
 rm -rf src; ln -s ~/STLinux.Archive src
 echo "Building Toolchain to $INSTALLDIR"
 ptxdist go
@@ -145,7 +152,8 @@ echo "Configuring BSP ($BSPNAME)"
 ptxdist select $PTXCONFIG
 ptxdist collection $COLLECTIONCONFIG
 ptxdist platform $PLATFORMCONFIG
-ptxdist toolchain $INSTALLDIR/STLinux.Toolchain-2013.03.1/sh4-linux/gcc-4.7.2-glibc-2.10.2-binutils-2.23.1-kernel-2.6.32-sanitized/bin
+#ptxdist toolchain $INSTALLDIR/STLinux.Toolchain-$TOOLCHAIN_VERSION/sh4-linux/$TOOLCHAIN/bin
+ptxdist toolchain $INSTALLDIR/STLinux.Toolchain-$TOOLCHAIN_VERSION/sh4-linux/$TOOLCHAIN/bin
 rm -rf src; ln -s ~/STLinux.Archive src
 
 rm platform-$BOXTYPE/logfile
