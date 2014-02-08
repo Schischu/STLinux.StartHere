@@ -112,9 +112,9 @@ echo "Configuring ptxdist"
 ./autogen.sh
 ./configure --prefix=$INSTALLDIR/ptxdist
 echo "Building ptxdist"
-make
+make || exit 2
 echo "Installing ptxdist"
-make install
+make install || exit 3
 
 cd $INSTALLDIR
 
@@ -134,21 +134,47 @@ touch ~/STLinux.Archive/boot/video_7105.elf
 cd $INSTALLDIR/STLinux.Toolchain
 echo "Configuring Toolchain"
 
+ARCH=`uname -p`
 #TOOLCHAIN=gcc-4.7.2-glibc-2.10.2-binutils-2.23-kernel-2.6.32-sanitized
 TOOLCHAIN=gcc-4.7.3-glibc-2.10.2-43-binutils-2.23.2-kernel-2.6.32-sanitized
 
-TOOLCHAIN_VERSION=`grep "PTXCONF_PROJECT=" ptxconfig/sh4-linux-$TOOLCHAIN | sed "s/PTXCONF_PROJECT=\"STLinux.Toolchain-//g" | sed "s/\"//g"`
+TOOLCHAIN_VERSION=`grep "PTXCONF_PROJECT=" ptxconfig/sh4-linux-$TOOLCHAIN.ptxconfig | \
+                   sed "s/PTXCONF_PROJECT=\"STLinux.Toolchain-//g" | sed "s/\"//g"`
+
+TOOLCHAIN_GCC_VERSION=`     grep "PTXCONF_CROSS_GCC_VERSION=" ptxconfig/sh4-linux-$TOOLCHAIN.ptxconfig | \
+                            sed "s/PTXCONF_CROSS_GCC_VERSION=\"//g" | sed "s/\"//g"`
+TOOLCHAIN_GLIBC_VERSION=`   grep "PTXCONF_GLIBC_VERSION=" ptxconfig/sh4-linux-$TOOLCHAIN.ptxconfig | \
+                            sed "s/PTXCONF_GLIBC_VERSION=\"//g" | sed "s/\"//g"`
+TOOLCHAIN_BINUTILS_VERSION=`grep "PTXCONF_CROSS_BINUTILS_VERSION=" ptxconfig/sh4-linux-$TOOLCHAIN.ptxconfig | \
+                            sed "s/PTXCONF_CROSS_BINUTILS_VERSION=\"//g" | sed "s/\"//g"`
+TOOLCHAIN_KERNEL_VERSION=`  grep "PTXCONF_KERNEL_HEADERS_VERSION=" ptxconfig/sh4-linux-$TOOLCHAIN.ptxconfig | \
+                            sed "s/PTXCONF_KERNEL_HEADERS_VERSION=\"//g" | sed "s/\"//g"`
+
+echo "DEBUG"
+echo "TOOLCHAIN: $TOOLCHAIN"
+echo "TOOLCHAIN_VERSION: $TOOLCHAIN_VERSION"
+echo "TOOLCHAIN_GCC_VERSION: $TOOLCHAIN_GCC_VERSION"
+echo "TOOLCHAIN_GLIBC_VERSION: $TOOLCHAIN_GLIBC_VERSION"
+echo "TOOLCHAIN_BINUTILS_VERSION: $TOOLCHAIN_BINUTILS_VERSION"
+echo "TOOLCHAIN_KERNEL_VERSION: $TOOLCHAIN_KERNEL_VERSION"
+#exit 4
 
 sed -i -e "s\^PTXCONF_PREFIX=.*\PTXCONF_PREFIX=$INSTALLDIR\g" ptxconfig/sh4-linux-$TOOLCHAIN.ptxconfig
 ptxdist select ptxconfig/sh4-linux-$TOOLCHAIN.ptxconfig
 rm -rf src; ln -s ~/STLinux.Archive src
 echo "Building Toolchain to $INSTALLDIR"
-ptxdist go
+ptxdist go || exit 5
 
 cd $INSTALLDIR
 
 cd $INSTALLDIR/$BSPNAME
 echo "Configuring BSP ($BSPNAME)"
+
+sed -i -e "s\^PTXCONF_CROSSCHAIN_VENDOR=.*\PTXCONF_CROSSCHAIN_VENDOR=STLinux.Toolchain-$TOOLCHAIN_VERSION\g" $PLATFORMCONFIG
+sed -i -e "s\^PTXCONF_CROSSCHAIN_CHECK=.*\PTXCONF_CROSSCHAIN_CHECK=$TOOLCHAIN_GCC_VERSION\g" $PLATFORMCONFIG
+sed -i -e "s\^PTXCONF_GLIBC_VERSION=.*\PTXCONF_GLIBC_VERSION=$TOOLCHAIN_GLIBC_VERSION\g" $PLATFORMCONFIG
+sed -i -e "s\^PTXCONF_KERNEL_VERSION=.*\PTXCONF_KERNEL_VERSION=$TOOLCHAIN_KERNEL_VERSION\g" $PLATFORMCONFIG
+
 ptxdist select $PTXCONFIG
 ptxdist collection $COLLECTIONCONFIG
 ptxdist platform $PLATFORMCONFIG
@@ -159,7 +185,7 @@ rm -rf src; ln -s ~/STLinux.Archive src
 rm platform-$BOXTYPE/logfile
 
 echo "Building BSP"
-ptxdist go
+ptxdist go || exit 6
 
 echo "Building BSP - Optional packages"
 # Currently we have to temporarly remove the collectionconfig to build optional packages
