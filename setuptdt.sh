@@ -108,6 +108,7 @@ PACKAGES="\
 	${UBUNTU:+cmake} \
 	${UBUNTU:+ruby} \
 	${UBUNTU:+python-dev} \
+	${UBUNTU:+libmpfr-dev} \
 ";
 
 if [ `which arch > /dev/null 2>&1 && arch || uname -m` == x86_64 ]; then
